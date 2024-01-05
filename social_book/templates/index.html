@@ -20,15 +20,15 @@
     <h3>Social Book</h3>
 
     {% if user.is_authenticated %}
-    <h3>Hello {{username}}!</h3>
+    <h3>Hello {{fname}}!</h3>
     <h4>You're successfully logged in.</h4>
     <button type="submit"><a href="/signout">Sign Out</a></button>
     <br>
     {% else %}
-    <button type="submit"><a href="/signup">Sign Up</a></button>
+    <button type="submit"><a href="/signup1">Sign Up</a></button>
     <br/>
     <br/>
-    <button type="submit"><a href="/signin">Sign In</a></button>
+    <button type="submit"><a href="/signin1">Sign In</a></button>
     {% endif %}
     <br>
 </body>

@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.contrib import messages
 from django.shortcuts import redirect,render
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 
-
+CustomUser = get_user_model()
 # Create your views here.
 def home(request):
 
@@ -20,21 +20,22 @@ def signup(request):
         email = request.POST.get('email')
         pass1 = request.POST.get('pass1')
         pass2 = request.POST.get('pass2')
-
-        myuser = User.objects.create_user(username,email,pass1)
-        myuser.firstname = fname
-        myuser.lastname = lname
-
+        # print(username,fname,lname,email,pass1)
+        CustomUser = get_user_model()
+        myuser = CustomUser.objects.create_user(username,email,pass1)
+        myuser.first_name = fname
+        myuser.last_name = lname
+        print(myuser)
         myuser.save()
         messages.success(request, "Account created Successfully!!")
-        return redirect('signin')
+        return redirect('signin1')
 
-    return render(request, 'signup.html')
+    return render(request, 'signup1.html')
 
 def signin(request):
 
     if request.method == 'POST':
-        username = request.POST.get('username')
+        username = request.POST.get('email')
         pass1 = request.POST.get('pass1')
         user = authenticate(username=username, password = pass1 )
 
@@ -47,12 +48,17 @@ def signin(request):
             messages.error(request, "Unable to Sign-in")
             return redirect('home')
 
-    return render(request, 'signin.html')
+    return render(request, 'signin1.html')
 
 def user_list(request):
-    users= User.objects.all()
-    print(users)
-    return render (request, "userlist.html",{"users":users})
+        
+    CustomUser = get_user_model()
+    # users= CustomUser.objects.all()
+    # print(users)
+    # return render (request, "userlist.html",{"users":users})
+    users = CustomUser.objects.filter(public_visibility=True)
+    return render(request, 'userlist.html', {'users': users})
+
 
 def signout(request):
     logout(request)
