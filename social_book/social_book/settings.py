@@ -54,6 +54,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'social_book.urls'
 
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -124,6 +126,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR/"static"]
+MEDIA_ROOT = BASE_DIR
+MEDIA_URL = '/'
 
 
 # Default primary key field type
