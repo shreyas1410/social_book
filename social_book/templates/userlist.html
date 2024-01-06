@@ -17,9 +17,13 @@
         <br>
         <ul>
             {%for user in users %}
-                <li>{{user.email}}</li>
+                <li>{{user.email}}| {{user.first_name}}| {{user.last_name}}|  </li>
             {%endfor%}
         </ul>
+        <button type="submit"><a href="upload_files">Upload files</a></button>
+        <br/>
+        <button type="submit"><a href="uploaded_files">Uploaded files</a></button>
+        <br/> 
     <button type="submit"><a href="/signout">SignOut</a></button>
         
         <script src="" async defer></script>

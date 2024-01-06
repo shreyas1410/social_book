@@ -29,16 +29,64 @@
 
 		gtag('config', 'UA-119386393-1');
 	</script>
-    <title>Upload Image</title>
+    <title>Upload Files</title>
 </head>
 <body>
     <div >
-        <h2>Upload Image</h2>
+		<br>
+		<style>
+			h2{
+				margin: 20px 0;
+				margin-left: 50px 0;
+				{% comment %} padding: left 20px; {% endcomment %}
+				padding: 10px 20px 5px 20px;
+
+			}
+		</style>
+		<style>
+			/* Centering container */
+			.center-container {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 100vh; /* Set the height of the container to 100% of the viewport height */
+			}
+			.card {
+				width: 300px;
+				height: 200px;
+				border: 1px solid #ccc;
+				border-radius: 8px;
+				padding: 16px;
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			}
+		</style>
+	
+        <h2>  Upload Image</h2>
+		<br>
         <form method="post" enctype="multipart/form-data">
           {% csrf_token %}
-          {{ form.as_p }}
-          <button type="submit">Upload</button>
-        </form>      
+
+          {% comment %} {{ form.as_p }} {% endcomment %}
+		  {% comment %} <div class="row">
+			<div class="col-sm-12">
+				<div class="input-group mb-0">
+					<button class="btn btn-primary btn-lg btn-block" type="submit">Upload</button>
+				</div>
+			</div>
+		</div>
+        <button type="submit">Upload</button> {% endcomment %}
+		<div class="col-sm-12 col-md-4 mb-30 ">
+			<div class="card card-box text-center">
+
+				<div class="card-body">
+					{{ form.as_p }}
+					{% comment %} <h5 class="card-title">Enter the details</h5> {% endcomment %}
+					<br>
+					<button class="btn btn-primary" type="submit">Upload</a>
+				</div>
+			</div>
+		</div>
+		</form>      
     </div>
 	<script src={% static "vendors/scripts/core.js"%}></script>
 	<script src={% static "vendors/scripts/script.min.js"%}></script>

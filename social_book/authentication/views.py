@@ -75,6 +75,7 @@ def signout(request):
     logout(request)
     return redirect('home')
 
+@login_required
 def upload_image(request):
     if request.method == 'POST':
         form = FileUploadForm(request.POST, request.FILES)
