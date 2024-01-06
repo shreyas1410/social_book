@@ -115,6 +115,25 @@
             </table>
         </div>    
     </div>
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="input-group mb-0">
+                {% comment %} <button type="submit"><a href="upload_files">Upload files</a></button> {% endcomment %}
+
+                <button class="btn btn-danger btn-lg btn-block"><a href = "upload_files" ><type="Submit">Upload Files</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="input-group mb-0">
+                {% comment %} <button type="submit"><a href="uploaded_files">Uploaded files</a></button> {% endcomment %}
+                <button class="btn btn-warning btn-lg btn-block"><a href = "uploaded_files" ><type="Submit">Uploaded Files</button>
+                
+                {% comment %} <button class="btn btn-primary btn-lg btn-block" type="submit">upload_files</button> {% endcomment %}
+            </div>
+        </div>
+    </div>
 	<script src={% static "vendors/scripts/core.js"%}></script>
 	<script src={% static "vendors/scripts/script.min.js"%}></script>
 	<script src={% static "vendors/scripts/process.js"%}></script>

@@ -45,7 +45,9 @@
                 <tr>
                   <th scope="col">Sr.No</th>
                   <th scope="col">File Name</th>
+                  <th scope="col">price</th>
                   <th scope="col">Download Link</th>
+                  <th scope="col">Uploaded At</th>
                 </tr>
               </thead>
               <tbody>
@@ -53,7 +55,9 @@
                         <tr>
                             <th scope="row">{{ user.id }}</th>
                             <th scope="row">{{ user.title }}</th>
+                            <th scope="row">{{ user.price }}</th>
                             <th scope="row"><a href="{{ user.file.url }}"Download>Download</th>
+                            <th scope="row">{{ user.uploaded_at }}</th>
                         </tr>
                     {% endfor %}
               </tbody>
