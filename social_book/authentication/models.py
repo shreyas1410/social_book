@@ -33,7 +33,7 @@ class CustomUser(AbstractUser, PermissionsMixin):
     REQUIRED_FIELDS = ['username']
 
     def __str__(self):
-        return self.emai
+        return self.email
 
 class UploadedFile(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)

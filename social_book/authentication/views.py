@@ -5,8 +5,15 @@ from django.contrib import messages
 from django.shortcuts import redirect,render
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
+from rest_framework.response import Response
 from .forms import FileUploadForm
 from .models import UploadedFile
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.views import APIView
+from .serializers import CustomUserSerializer,UploadedFileSerializer
+from rest_framework import viewsets
+from rest_framework.generics import RetrieveAPIView
+from rest_framework.permissions import IsAuthenticated 
 
 CustomUser = get_user_model()
 # Create your views here.
@@ -96,10 +103,45 @@ def upload_image(request):
 def uploaded_images(request):
     user_files = UploadedFile.objects.filter(user = request.user)
     return render(request, 'uploaded_files.html', {'user_files':user_files})
-    # return render(request, 'userlist.html', {'users': users})                                                
+    # return render(request, 'userlist.html', {'users': users})         
+class GenerateToken(APIView):
+    def post(self, request):
+        if request.method == 'POST':
+            username = request.data.get('username')
+            password = request.data.get('password')
+
+            #print(f"Received credentials: email={email}, password={password}")
+
+            user = authenticate(request, username=username, password=password)
+
+            #print(f"Authenticated user: {user}")
+
+            if user is not None:
+                refresh = RefreshToken.for_user(user)
+                access_token = str(refresh.access_token)
+                return Response({'access_token': access_token})
+            else:
+                return Response({'error': 'Invalid Credentials'}, status=401)
+        return Response({'error': 'Invalid request method'}, status=400)                                       
 
 #def register(request):
     #return render(request,'signup.html')
 
 #  def login(request):
     #return render(request,'signin.html')
+
+class CustomUserViewSet(viewsets.ModelViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+
+class UploadedFileViewSet(viewsets.ModelViewSet):
+    queryset = UploadedFile.objects.all()
+    serializer_class = UploadedFileSerializer
+
+class CustomUserDetailView(RetrieveAPIView):
+    serializer_class = CustomUserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        # Return the logged-in user
+        return self.request.user
