@@ -21,4 +21,4 @@ class CustomUserChangeForm(UserChangeForm):
 class FileUploadForm(forms.ModelForm):
     class Meta:
         model = UploadedFile
-        fields = ['title','file']
+        fields = ['title','file','price']

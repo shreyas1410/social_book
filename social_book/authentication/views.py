@@ -1,3 +1,4 @@
+from django.forms import ValidationError
 from django.shortcuts import render
 from django.http import HttpResponse
 # from django.contrib.auth.models import User
@@ -14,7 +15,15 @@ from .serializers import CustomUserSerializer,UploadedFileSerializer
 from rest_framework import viewsets
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated 
-from django.contrib.auth import views as auth_views
+# from django.contrib.auth.decorators.csrf import 
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+from django.core.mail import send_mail
+
+
 
 CustomUser = get_user_model()
 # Create your views here.
@@ -54,9 +63,9 @@ def signup(request):
 def signin(request):
 
     if request.method == 'POST':
-        username = request.POST.get('email')
+        email = request.POST.get('email')
         pass1 = request.POST.get('pass1')
-        user = authenticate(username=username, password = pass1 )
+        user = authenticate(username=email, password = pass1 )
 
         if user is not None:
             login(request, user)
@@ -105,15 +114,18 @@ def uploaded_images(request):
     user_files = UploadedFile.objects.filter(user = request.user)
     return render(request, 'uploaded_files.html', {'user_files':user_files})
     # return render(request, 'userlist.html', {'users': users})         
+
+
 class GenerateToken(APIView):
+
     def post(self, request):
         if request.method == 'POST':
-            username = request.data.get('username')
+            email = request.data.get('email')
             password = request.data.get('password')
 
             #print(f"Received credentials: email={email}, password={password}")
 
-            user = authenticate(request, username=username, password=password)
+            user = authenticate(request, username=email, password=password)
 
             #print(f"Authenticated user: {user}")
 
@@ -146,3 +158,64 @@ class CustomUserDetailView(RetrieveAPIView):
     def get_object(self):
         # Return the logged-in user
         return self.request.user
+    
+# from rest_framework.decorators import api_view, permission_classes
+# from rest_framework.permissions import IsAuthenticated
+# from rest_framework.response import Response
+# from rest_framework import status
+# from django.contrib.auth import update_session_auth_hash
+# from .serializers import ChangePasswordSerializer
+
+# # @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# def change_password(request):
+#     if request.method == 'POST':
+#         serializer = ChangePasswordSerializer(data=request.data)
+#         if serializer.is_valid():
+#             user = request.user
+#             if user.check_password(serializer.data.get('old_password')):
+#                 user.set_password(serializer.data.get('new_password'))
+#                 user.save()
+#                 update_session_auth_hash(request, user)  # To update session after password change
+#                 return Response({'message': 'Password changed successfully.'}, status=status.HTTP_200_OK)
+#             return Response({'error': 'Incorrect old password.'}, status=status.HTTP_400_BAD_REQUEST)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@csrf_exempt
+def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        # print(email)
+        # email = "ay@ay"
+        try:
+            user = get_user_model().objects.get(email=email)
+        except get_user_model().DoesNotExist:
+            return JsonResponse({'message': 'No user with this email address'}, status=404)
+        except ValidationError:  # Handle validation errors
+            return JsonResponse({'message': 'Invalid email address'}, status=400)
+        
+        token = default_token_generator.make_token(user)
+        uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+        reset_url = f"http://127.0.0.1:8000/reset/{uidb64}/{token}/"
+
+        
+
+        uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+        reset_url = f"http://127.0.0.1:8000/reset-password/{uidb64}/{token}/"
+
+        # Send the reset email
+        subject = 'Password Reset'
+        message = f"Click the following link to reset your password:\n\n{reset_url}"
+        from_email = "choudharyshreyasj@gmail.com" 
+        recipient_list = [user.email]
+
+        send_mail(subject, message, from_email, recipient_list)
+        
+        return JsonResponse({'message': 'Password reset email sent successfully'}, status=200)
+        
+
+    elif request.method == 'GET':
+        # Render the forgot password form
+        return render(request, 'forgot_password.html')
+
+    return JsonResponse({'message': 'Invalid request method'}, status=400)

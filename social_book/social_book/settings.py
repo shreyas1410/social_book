@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'djoser',
     'authentication',
     'rest_framework_simplejwt',
+    'django_rest_passwordreset',
 ]
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -150,6 +151,12 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR/"static"]
 MEDIA_ROOT = BASE_DIR
 MEDIA_URL = '/'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # Use your preferred email backend
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'choudharyshreyasj@gmail.com'
+EMAIL_HOST_PASSWORD = 'cbervvxfceyexerd'
 
 
 # Default primary key field type
