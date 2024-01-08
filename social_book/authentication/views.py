@@ -14,6 +14,7 @@ from .serializers import CustomUserSerializer,UploadedFileSerializer
 from rest_framework import viewsets
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated 
+from django.contrib.auth import views as auth_views
 
 CustomUser = get_user_model()
 # Create your views here.
