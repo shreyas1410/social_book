@@ -34,17 +34,14 @@
 <body>
     <div >
 		<br>
-		<style>
-			h2{
-				margin: 20px 0;
-				margin-left: 50px 0;
-				{% comment %} padding: left 20px; {% endcomment %}
-				padding: 10px 200px 5px 200px;
 
-			}
-		</style>
 		<style>
-			/* Centering container */
+			h2 {
+				text-align: left; /* Center-align the text */
+				margin: 10px auto; /* Apply 20px margin at the top and bottom, auto for horizontal centering */
+				padding: 0px 80px 5px 80px; /* Adjust padding values as needed */
+			}
+			{% comment %} /* Centering container */
 			.center-container {
 				display: flex;
 				justify-content: center;
@@ -52,13 +49,66 @@
 				height: 100vh; /* Set the height of the container to 100% of the viewport height */
 			}
 			.card {
-				width: 300px;
-				height: 200px;
+				width: 400px;
+				height: 220px;
 				border: 1px solid #ccc;
 				border-radius: 8px;
 				padding: 16px;
-				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+				box-shadow: 0 100px 100px rgba(0, 0, 0, 0.1);
+				text-align: left;
+				margin-left: 450px;
 			}
+			.submit1_button{
+				margin-left: 115px;
+				padding: 20x;
+			} {% endcomment %}
+			{% comment %} /* Centering container */
+			.center-container {
+  				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 100vh; /* Set the height of the container to 100% of the viewport height */
+			}
+
+			.card {
+				width: 400px;
+				height: 220px;
+				border: 1px solid #ccc;
+				border-radius: 8px;
+				padding: 16px;
+				box-shadow: 0 100px 100px rgba(0, 0, 0, 0.1);
+				text-align: left;
+			}
+
+			 {% endcomment %}
+			.center-container {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 100vh; /* Set the height of the container to 100% of the viewport height */
+			}
+			  
+			.card {
+				width: 400px;
+				height: 220px;
+				border: 1px solid #ccc;
+				border-radius: 8px;
+				padding: 16px;
+				box-shadow: 0 100px 100px rgba(0, 0, 0, 0.1);
+				text-align: left;
+			}
+			  
+			  {% comment %} /* Additional styles to override any existing margin or positioning */
+			  body, html {
+				margin: 0;
+				padding: 0;
+				height: 100%;
+			} {% endcomment %}
+			.submit1_button {
+				text-align: center; /* Center-align the text within the button */
+				margin-top: 10px auto; /* Add margin to the top */
+				margin-left:100px;
+		  }
 		</style>
 	
         <h2>  Upload Image</h2>
@@ -75,14 +125,14 @@
 			</div>
 		</div>
         <button type="submit">Upload</button> {% endcomment %}
-		<div class="col-sm-12 col-md-4 mb-30 ">
-			<div class="card card-box text-center">
+		<div class="col-sm-12 col-md-4 mb-30">
+			<div class="card card-box">
 
 				<div class="card-body">
 					{{ form.as_p }}
 					{% comment %} <h5 class="card-title">Enter the details</h5> {% endcomment %}
 					<br>
-					<button class="btn btn-primary" type="submit">Upload</a>
+					<button class="btn btn-primary submit1_button" type="submit">Upload</a>
 				</div>
 			</div>
 		</div>
