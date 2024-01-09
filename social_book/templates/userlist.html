@@ -89,6 +89,18 @@
             margin: 10px;
             padding: 10px;
         }
+        .box2 {
+            display: flex;
+            justify-content: space-between;
+            column-gap: 2em;
+            {% comment %} flex-wrap: wrap; {% endcomment %}
+            height: 80px;
+            padding-left: 300px; /* Left padding */
+            padding-right: 300px; /* Right padding */
+            {% comment %} padding: px; {% endcomment %}
+            {% comment %} align-content: space-between; {% endcomment %}
+            {% comment %} row gap {% endcomment %}
+          }
         {% comment %} .submit2_button{
             margin: 10px;
             padding: 10px;
@@ -124,16 +136,16 @@
             </table>
         </div>    
     </div>
-    <div class="col">
-        <div class="col-sm-2">
-            <div class="input-group mb-0">
+    <div class="box2">
+        {% comment %} <div class="col-sm-2"> {% endcomment %}
+            {% comment %} <div class="input-group mb-0"> {% endcomment %}
                 {% comment %} <button type="submit"><a href="upload_files">Upload files</a></button> {% endcomment %}
                 <br>
                 <button class="btn btn-info btn-lg btn-block submit1_button "><a href = "upload_files" ><type="Submit">Upload Files</button>
                 <button class="btn btn-info btn-lg btn-block submit1_button"><a href = "uploaded_files" ><type="Submit">Uploaded Files</button>
                 <br>
-            </div>
-        </div>
+            {% comment %} </div> {% endcomment %}
+        {% comment %} </div> {% endcomment %}
     </div>
     {% comment %} <div class="row">
         <div class="col-sm-2">
