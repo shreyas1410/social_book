@@ -6,13 +6,14 @@ from django.contrib import messages
 from django.shortcuts import redirect,render
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
+from rest_framework import generics
 from rest_framework.response import Response
 from .forms import FileUploadForm
 from .models import UploadedFile
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
 from .serializers import CustomUserSerializer,UploadedFileSerializer
-from rest_framework import viewsets
+from rest_framework import viewsets,generics
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated 
 # from django.contrib.auth.decorators.csrf import 
@@ -22,6 +23,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from django.core.mail import send_mail
+from .signals import user_signed_up
+# from rest_framework.generics import ListAPIView
 
 
 
@@ -56,6 +59,7 @@ def signup(request):
         # print(myuser)
         myuser.save()
         messages.success(request, "Account created Successfully!!")
+        user_signed_up.send(sender=myuser, username=myuser.username)
         return redirect('signin1')
 
     return render(request, 'signup1.html')
@@ -159,27 +163,22 @@ class CustomUserDetailView(RetrieveAPIView):
         # Return the logged-in user
         return self.request.user
     
-# from rest_framework.decorators import api_view, permission_classes
-# from rest_framework.permissions import IsAuthenticated
-# from rest_framework.response import Response
-# from rest_framework import status
-# from django.contrib.auth import update_session_auth_hash
-# from .serializers import ChangePasswordSerializer
+class CustomerListView(generics.ListAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+    
+# class CustomUserListView(ListAPIView):
+#     serializer_class = CustomUserSerializer
+#     permission_classes = [IsAuthenticated]
 
-# # @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
-# def change_password(request):
-#     if request.method == 'POST':
-#         serializer = ChangePasswordSerializer(data=request.data)
-#         if serializer.is_valid():
-#             user = request.user
-#             if user.check_password(serializer.data.get('old_password')):
-#                 user.set_password(serializer.data.get('new_password'))
-#                 user.save()
-#                 update_session_auth_hash(request, user)  # To update session after password change
-#                 return Response({'message': 'Password changed successfully.'}, status=status.HTTP_200_OK)
-#             return Response({'error': 'Incorrect old password.'}, status=status.HTTP_400_BAD_REQUEST)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def get_queryset(self):
+#         # Return the queryset of all users (or modify as needed)
+#         return CustomUser.objects.all()
+
+# class CustomerListView(ListAPIView):
+#     queryset = CustomerUser.objects.all()
+#     serializer_class = CustomerUserSerializer
+    
     
 @csrf_exempt
 def forgot_password(request):
@@ -219,3 +218,6 @@ def forgot_password(request):
         return render(request, 'forgot_password.html')
 
     return JsonResponse({'message': 'Invalid request method'}, status=400)
+# class CustomerListView(ListAPIView):
+#     queryset = CustomerUser.objects.all()
+#     serializer_class = CustomerUserSerializer

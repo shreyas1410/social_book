@@ -2,6 +2,12 @@ from django.contrib.auth.models import AbstractUser, PermissionsMixin, BaseUserM
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+
+    
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
@@ -34,9 +40,14 @@ class CustomUser(AbstractUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+    
+@receiver(post_save, sender = CustomUser)
+def user_call_api(sender, instance, **kwargs):
+    print("user created")
+    print(sender, instance, kwargs)
 
 class UploadedFile(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser,related_name="authors", on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     file = models.FileField(upload_to='uploads/')
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
@@ -44,3 +55,20 @@ class UploadedFile(models.Model):
 
     def __str__(self):
         return self.title
+    
+# list = UploadedFile.objects.values('user__id').annotate(Count('user'))                
+# >>> list
+# <QuerySet [{'user__id': 5, 'user__count': 2}, {'user__id': 19, 'user__count': 1}]>
+
+# list = CustomUser.objects.values('id').annotate(Count('id')) 
+# >>> list
+# <QuerySet [{'id': 11, 'id__count': 1}, {'id': 8, 'id__count': 1}, {'id': 19, 'id__count': 1}, {'id': 4, 'id__count': 1}, {'id': 21, 'id__count': 1}, {'id': 14, 'id__count': 1}, {'id': 3, 'id__count': 1}, {'id': 17, 'id__count': 1}, {'id': 22, 'id__count': 1}, {'id': 20, 'id__count': 1}, {'id': 10, 'id__count': 1}, {'id': 7, 'id__count': 1}, {'id': 1, 'id__count': 1}, {'id': 5, 'id__count': 1}, {'id': 18, 'id__count': 1}, {'id': 2, 'id__count': 1}, {'id': 16, 'id__count': 1}, {'id': 15, 'id__count': 1}, {'id': 6, 'id__count': 1}]>
+
+# CustomUser.objects.aggregate(Max('id'))
+# {'id__max': 22}
+    
+# >>> CustomUser.objects.aggregate(Avg('id')) 
+# {'id__avg': 11.526315789473685}
+    
+# >>> CustomUser.objects.aggregate(Sum('id')) 
+# # {'id__sum': Decimal('219')}
